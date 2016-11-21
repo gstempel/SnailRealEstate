@@ -5,3 +5,10 @@
 #include <signal.h>
 #include <string.h>
 
+char ** split(char * str, char * delim);
+
+char ** getInput();
+
+void cd(char * path);
+
+void exit();
