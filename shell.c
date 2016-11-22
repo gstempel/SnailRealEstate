@@ -6,6 +6,7 @@ char * getInput() {
   getcwd(cwd, sizeof(cwd));
   printf("%s: ", cwd);
   fgets(input, sizeof(input), stdin);
+  *(strchr(input, '\n')) = NULL;
   return input;
 }
 
