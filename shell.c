@@ -8,7 +8,7 @@ char * getInput() {
   fgets(input, sizeof(input), stdin);
   *(strchr(input, '\n')) = NULL;
   char* retInput = (char*) malloc(sizeof(input));
-  retInput = &input[0];
+  retInput = &(input[0]);
   return retInput;
 }
 
@@ -23,17 +23,18 @@ char ** split(char * str, char * delim) {
     i++;
   //return command;
   char** cmd = (char**) malloc(sizeof(command));
-  cmd = &command[0];
+  cmd = &(command[0]);
   return cmd;
 }
 
 int main(int argc, char * argv[]) {
   char *in = getInput();
   printf("\nInput: %s\n",in);
-  char **in2 = split(in, " ");
+  char** in2 = split(in, " ");
   while(*in2) {
     printf("\nInput after split: %s",*in2);
     in2 ++;
   }
   printf("\n");
+  return 0;
 }
