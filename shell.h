@@ -4,10 +4,11 @@
 #include <unistd.h>
 #include <signal.h>
 #include <string.h>
+#include <limits.h>
 
 char ** split(char * str, char * delim);
 
-char ** getInput();
+char * getInput();
 
 void cd(char * path);
 
