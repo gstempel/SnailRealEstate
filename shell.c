@@ -14,7 +14,9 @@ char * getInput() {
 
 void cd(char * path);
 
-void exit();
+void cd(char* path) {
+  chdir(path);
+}
 
 char ** split(char * str, char * delim) {
   char *command[100];
@@ -27,14 +29,26 @@ char ** split(char * str, char * delim) {
   return cmd;
 }
 
+void run(char** cmd) {
+  if (!(strcmp(cmd[0],"exit"))) {
+    exit(0);
+  } else if (!(strcmp(cmd[0], "cd"))) {
+    cd(cmd[1]);
+  } else {
+    printf("Something else\n");
+  }
+}
+
 int main(int argc, char * argv[]) {
   char *in = getInput();
   printf("\nInput: %s\n",in);
   char** in2 = split(in, " ");
+  char** saveIn2 = in2;
   while(*in2) {
     printf("\nInput after split: %s",*in2);
     in2 ++;
   }
   printf("\n");
+  run(saveIn2);
   return 0;
 }
