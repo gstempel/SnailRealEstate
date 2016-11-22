@@ -18,11 +18,8 @@ char ** split(char * str, char * delim) {
   str[strlen(str) - 1] = 0;
   char *command[100];
   int i = 0;
-  while(str) {
-    command[i] = strsep(&str, delim);
+  while((command[i] = strsep(&str, delim)))
     i++;
-  }
-  command[i] = 0;
   return command;
 }
 
