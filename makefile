@@ -1,7 +1,7 @@
-turtleTest: shell.c shell.h
+turtletest: shell.c shell.h
 	gcc shell.c -o turtleTest
 
-run:
+run: turtleTest
 	./turtleTest
 
 clean:
