@@ -33,7 +33,12 @@ void exec(char** cmd) {
   } else if (!(strcmp(cmd[0], "cd"))) {
     cd(cmd[1]);
   } else {
-    execvp(cmd[0], cmd);
+    int parent = fork();
+    if (parent) {
+      wait();
+    } else {
+      execvp(cmd[0], cmd);
+    }
   }
 }
 
