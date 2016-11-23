@@ -49,15 +49,6 @@ void run() {
 }
 
 int main(int argc, char * argv[]) {
-  /*char *in = getInput();
-  printf("\nInput: %s\n",in);
-  char** in2 = split(in, " ");
-  char** saveIn2 = in2;
-  while(*in2) {
-    printf("\nInput after split: %s",*in2);
-    in2 ++;
-  }
-  printf("\n");*/
   run();
   return 0;
 }
