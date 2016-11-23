@@ -13,3 +13,7 @@ char * getInput();
 void cd(char * path);
 
 void exit();
+
+void run();
+
+void exec(char** cmd);

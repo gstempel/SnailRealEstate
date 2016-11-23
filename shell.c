@@ -12,8 +12,6 @@ char * getInput() {
   return retInput;
 }
 
-void cd(char * path);
-
 void cd(char* path) {
   chdir(path);
 }
@@ -29,18 +27,24 @@ char ** split(char * str, char * delim) {
   return cmd;
 }
 
-void run(char** cmd) {
+void exec(char** cmd) {
   if (!(strcmp(cmd[0],"exit"))) {
     exit(0);
   } else if (!(strcmp(cmd[0], "cd"))) {
     cd(cmd[1]);
   } else {
-    printf("Something else\n");
+    execvp(cmd[0], cmd);
+  }
+}
+
+void run() {
+  while (1) {
+    exec(split(getInput()," "));
   }
 }
 
 int main(int argc, char * argv[]) {
-  char *in = getInput();
+  /*char *in = getInput();
   printf("\nInput: %s\n",in);
   char** in2 = split(in, " ");
   char** saveIn2 = in2;
@@ -48,7 +52,7 @@ int main(int argc, char * argv[]) {
     printf("\nInput after split: %s",*in2);
     in2 ++;
   }
-  printf("\n");
-  run(saveIn2);
+  printf("\n");*/
+  run();
   return 0;
 }
