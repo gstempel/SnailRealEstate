@@ -5,6 +5,8 @@
 #include <signal.h>
 #include <string.h>
 #include <limits.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 char ** split(char * str, char * delim);
 
