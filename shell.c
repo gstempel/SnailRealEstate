@@ -35,7 +35,8 @@ void exec(char** cmd) {
   } else {
     int parent = fork();
     if (parent) {
-      wait(0);
+      int status;
+      wait(&status);
     } else {
       execvp(cmd[0], cmd);
     }
