@@ -9,9 +9,7 @@ Attempted:
 Bugs:
 
 Files & Function Headers:
-shell.c
-
-	Handles shell operations
+shell.c: Handles shell operations
 	
 	/*======== char** split(char * str, char * delim) ==========
 	Inputs: string to be split by delimeter
