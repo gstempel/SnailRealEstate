@@ -53,9 +53,27 @@ void exec(char** cmd) {
   }
 }
 
+int numPtrElements(char** ptr) {
+  int numChars = 0;
+  while (*ptr++) {
+    numChars++;
+  }
+  return numChars;
+}
+
 void run() {
   while (1) {
-    exec(split(getInput()," "));
+    char** cmds = split(getInput(),";");
+    int i;
+    int max = numPtrElements(cmds);
+    for (i=0; i<max; i++) {
+      char* temp = (char*) malloc(strlen(cmds[i]) + 1);
+      strcpy(temp, cmds[i]);
+      printf("BEFORE: %s\n", cmds[i]);
+      char** tempSplit = split(temp," ");
+      printf("AFTER: %s\n\n", cmds[i]);
+      exec(tempSplit);
+    }
   }
 }
 
