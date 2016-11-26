@@ -67,12 +67,12 @@ void run() {
     int i;
     int max = numPtrElements(cmds);
     for (i=0; i<max; i++) {
-      char* temp = (char*) malloc(strlen(cmds[i]) + 1);
-      strcpy(temp, cmds[i]);
-      printf("BEFORE: %s\n", cmds[i]);
-      char** tempSplit = split(temp," ");
-      printf("AFTER: %s\n\n", cmds[i]);
-      exec(tempSplit);
+      char* cmd = (char*) malloc(strlen(cmds[i]) + 1);
+      strcpy(cmd, cmds[i]);
+      printf("cmd: %s\n", cmd);
+
+      //running "ls -l" runs, and then makes cmds[1] = "-l"??
+      exec(split(cmd," "));
     }
   }
 }
