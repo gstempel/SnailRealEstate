@@ -26,10 +26,12 @@ void cd(char* path) {
 char ** split(char * str, char * delim) {
   //effectively split str by delim
   char *command[100];
+  char* copy = str;
   int i = 0;
-  while((command[i] = strsep(&str, delim)))
+  while((command[i] = strsep(&copy, delim)))
     i++;
-
+  command[i] = 0;
+  
   //turn heap mem to more persistent mem for return
   char** cmd = (char**) malloc(sizeof(command));
   cmd = &(command[0]);
@@ -69,10 +71,14 @@ void run() {
     for (i=0; i<max; i++) {
       char* cmd = (char*) malloc(strlen(cmds[i]) + 1);
       strcpy(cmd, cmds[i]);
-      printf("cmd: %s\n", cmd);
 
-      //running "ls -l" runs, and then makes cmds[1] = "-l"??
-      exec(split(cmd," "));
+      //WHY IS SPLIT AFFECTING ORIGINAL CMDS??
+      printf("BEFORE: %s\n", cmds[i]);
+      char** cmdSplit = split(cmd," ");
+      printf("AFTER: %s\n", cmds[i]);
+
+      
+      //exec(cmdSplit);
     }
   }
 }
