@@ -33,8 +33,8 @@ char ** split(char * str, char * delim) {
   command[i] = 0;
   
   //turn heap mem to more persistent mem for return
-  char** cmd = (char**) malloc(sizeof(char*) * 100);
-  //IS ISSUE HERE
+  char** cmd = (char**) malloc(sizeof(command));
+  cmd = &(command[0]);
   return cmd;
 }
 
@@ -77,8 +77,7 @@ void run() {
       char** cmdSplit = split(cmd," ");
       printf("AFTER: %s\n", cmds[i]);
 
-      free(cmdSplit);
-      free(cmd);
+      
       //exec(cmdSplit);
     }
   }
