@@ -77,7 +77,7 @@ void run() {
       char** cmdSplit = split(cmd," ");
       printf("AFTER: %s\n", cmds[i]);
 
-      
+      free(cmd);
       //exec(cmdSplit);
     }
   }
