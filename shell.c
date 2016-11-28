@@ -13,8 +13,9 @@ char * getInput() {
   *(strchr(input, '\n')) = NULL;
 
   //turn stack mem to persistent mem for return
-  char* retInput = (char*) malloc(sizeof(input));
-  retInput = &(input[0]);
+  char* retInput = (char*) malloc(strlen(input)+1);
+  strcpy(retInput, input);
+  printf("CMD: %s\n", retInput);
   return retInput;
 }
 
@@ -25,17 +26,15 @@ void cd(char* path) {
 
 char ** split(char * str, char * delim) {
   //effectively split str by delim
-  char *command[100];
-  char* copy = str;
+  char **command = (char**)malloc(100);
   int i = 0;
-  while((command[i] = strsep(&copy, delim)))
+  while((command[i] = strsep(&str, delim)))
     i++;
   command[i] = 0;
   
   //turn heap mem to more persistent mem for return
-  char** cmd = (char**) malloc(sizeof(command));
-  cmd = &(command[0]);
-  return cmd;
+
+  return command;
 }
 
 void exec(char** cmd) {
@@ -65,20 +64,29 @@ int numPtrElements(char** ptr) {
 
 void run() {
   while (1) {
-    char** cmds = split(getInput(),";");
+    char* thing = getInput();
+    char** cmds = split(thing,";");
     int i;
     int max = numPtrElements(cmds);
+    for (i=0; i<max; i++) {
+      printf("command %d: %s\n", i, cmds[i]);
+    }
+
     for (i=0; i<max; i++) {
       char* cmd = (char*) malloc(strlen(cmds[i]) + 1);
       strcpy(cmd, cmds[i]);
 
-      //WHY IS SPLIT AFFECTING ORIGINAL CMDS??
+      /*
       printf("BEFORE: %s\n", cmds[i]);
+      printf("BEFORE: %p\n", cmds[i]);
+      printf("BEFORE: %p\n", cmd);
+      
+      */
       char** cmdSplit = split(cmd," ");
-      printf("AFTER: %s\n", cmds[i]);
+      //printf("AFTER: %s\n", cmds[i]);
 
+      exec(cmdSplit);
       free(cmd);
-      //exec(cmdSplit);
     }
   }
 }
