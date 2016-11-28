@@ -8,14 +8,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-struct cmd {
-  char* cmd;
-  char* args;
-  struct cmd* next;
-};
-
-typedef struct cmd command;
-
 char ** split(char * str, char * delim);
 
 char * getInput();
