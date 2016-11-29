@@ -36,7 +36,7 @@ char ** split(char * str, char * delim) {
   return command;
 }
 
-int redir(char** cmd) {
+int notRedir(char** cmd) {
   int i, j, out=0, in=0, outA = 0;
   char *input, *output;
   int max = numPtrElements(cmd);
@@ -96,7 +96,7 @@ void exec(char** cmd) {
       int status;
       wait(&status); //wait for child
     } else { //this is child
-      if (redir(cmd)) { 
+      if (notRedir(cmd)) { 
 	execvp(cmd[0], cmd);
 	exit(1);
       }
