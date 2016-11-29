@@ -36,6 +36,21 @@ char ** split(char * str, char * delim) {
   return command;
 }
 
+int redir(char** cmd) {
+  int i, j, out=0, in=0;
+  for (i=0; i<numPtrElements(cmd); i++) {
+    for (j=0; j<strlen(cmd[i]); j++) {
+      if (cmd[i][j] == '>') {
+	out = 1; //we are changing stdout
+      } if (cmd[i][j] == '<') {
+	in = 1;
+      }
+    }
+  } if (!(out) && !(in)) { return 0; }
+  printf("Redirection! To do\n");
+  return 1;
+}
+
 void exec(char** cmd) {
   //handle special cases where forking is wrong approach
   if (!(strcmp(cmd[0],"exit"))) {
@@ -48,7 +63,9 @@ void exec(char** cmd) {
       int status;
       wait(&status); //wait for child
     } else { //this is child
-      execvp(cmd[0], cmd);
+      if (!(redir(cmd))) { 
+	execvp(cmd[0], cmd);
+      }
     }
   }
 }

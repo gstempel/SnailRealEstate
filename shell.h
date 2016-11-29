@@ -17,3 +17,5 @@ void cd(char * path);
 void run();
 
 void exec(char** cmd);
+
+int numPtrElements(char** ptr);
