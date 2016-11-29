@@ -38,17 +38,31 @@ char ** split(char * str, char * delim) {
 
 int redir(char** cmd) {
   int i, j, out=0, in=0;
+  char* input = "";
+  char* output = "";
   for (i=0; i<numPtrElements(cmd); i++) {
     for (j=0; j<strlen(cmd[i]); j++) {
-      if (cmd[i][j] == '>') {
-	out = 1; //we are changing stdout
-      } if (cmd[i][j] == '<') {
-	in = 1;
+      if (cmd[i][j] == '>') { //changing stdout
+	out=2;
+	printf("OUT\n");
+	//output = file to output to
+      } if (cmd[i][j] == '<') { //changing stdin
+	in = 2;
+	printf("IN\n");
+	//input = file to use as input
       }
     }
-  } if (!(out) && !(in)) { return 0; }
-  printf("Redirection! To do\n");
-  return 1;
+  } if (!(out || in)) { return 0; } //bool: redir is false
+
+  //redirection!
+  if (out) {
+    printf("output: %s\n", output);
+  } if (in) {
+    printf("input: %s\n", input);
+  }
+  //execvp(cmd[0], cmd[0]);
+  
+  return 1; //bool: redir is true
 }
 
 void exec(char** cmd) {
