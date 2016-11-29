@@ -15,7 +15,6 @@ char * getInput() {
   //turn stack mem to persistent mem for return
   char* retInput = (char*) malloc(strlen(input)+1);
   strcpy(retInput, input);
-  printf("CMD: %s\n", retInput);
   return retInput;
 }
 
@@ -65,25 +64,13 @@ int numPtrElements(char** ptr) {
 void run() {
   while (1) {
     char* thing = getInput();
-    char** cmds = split(thing,";");
+    char** cmds = split(thing,";"); //split sep commands
     int i;
     int max = numPtrElements(cmds);
-    for (i=0; i<max; i++) {
-      printf("command %d: %s\n", i, cmds[i]);
-    }
-
-    for (i=0; i<max; i++) {
+    for (i=0; i<max; i++) { //run each command
       char* cmd = (char*) malloc(strlen(cmds[i]) + 1);
       strcpy(cmd, cmds[i]);
-
-      /*
-      printf("BEFORE: %s\n", cmds[i]);
-      printf("BEFORE: %p\n", cmds[i]);
-      printf("BEFORE: %p\n", cmd);
-      
-      */
       char** cmdSplit = split(cmd," ");
-      //printf("AFTER: %s\n", cmds[i]);
 
       exec(cmdSplit);
       free(cmd);
