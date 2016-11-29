@@ -39,15 +39,11 @@ char ** split(char * str, char * delim) {
 //joins str but as char** for use in notRedir
 char* join(char** strA) {
   char* strArr = (char*) malloc(100);
-  printf("no\n");
   int max = numPtrElements(strA);
-  printf("a\n");
   int i;
   for (i=0; i<max; i++) {
-    printf("i: %d\n",i);
     strcat(strArr, strA[i]);
   }
-  printf("joined: %s\n", strArr);
   return strArr;
 }
 
@@ -60,7 +56,7 @@ int notRedir(char** cmd) {
       if (cmd[i][j] == '>') { //changing stdout
 	out=2;
 
-	if (j==0) { // > is isolated
+	if (j==0 || j==strlen(cmd[i])-1) { // > at start of arg
 	  return notRedir(split(join(cmd)," "));
 	}
 	
@@ -70,6 +66,11 @@ int notRedir(char** cmd) {
 
       } if (cmd[i][j] == '<') { //changing stdin
 	in = 2;
+
+	if (j==0) { // < is at start of arg
+	  return notRedir(split(join(cmd)," "));
+	}
+	
 	//printf("IN\n");
 	input = &cmd[i][j+1];
 	cmd[i][j] = '\0';//replace < with null so it isolates command for exec
