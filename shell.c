@@ -53,39 +53,48 @@ int notRedir(char** cmd) {
   int max = numPtrElements(cmd);
   for (i=0; i<max; i++) {
     for (j=0; j<strlen(cmd[i]); j++) {
-      if (cmd[i][j] == '>') { //changing stdout
+      if (((j+1) <= strlen(cmd[i])) && (cmd[i][j] == '>') && (cmd[i][j+1] == '>')) {
+	outA = 2;
+	//change str format if >> is in weird place
+	if (j==0 || j+1==strlen(cmd[i])-1) { return notRedir(split(join(cmd)," ")); }
+	output = &cmd[i][j +2];
+	printf("Look for OutA!\n");
+	cmd[i][j] = '\0';
+	cmd[i][j+1] = '\0';//replace >> with null so it isolates command for exec
+      }
+      
+      else if (cmd[i][j] == '>' && (!(outA))) { //changing stdout
 	out=2;
-
-	if (j==0 || j==strlen(cmd[i])-1) { // > at start of arg
+	//> is in weird place
+	if (j==0 || j==strlen(cmd[i])-1) {
 	  return notRedir(split(join(cmd)," "));
 	}
-	
-	//printf("OUT\n");
 	output = &cmd[i][j+1];
 	cmd[i][j] = '\0';//replace > with null so it isolates command for exec
 
-      } if (cmd[i][j] == '<') { //changing stdin
+	//changing stdin
+      } else if (cmd[i][j] == '<') {
 	in = 2;
-
-	if (j==0) { // < is at start of arg
+	// < is in weird place
+	if (j==0 || j==strlen(cmd[i])-1) {
 	  return notRedir(split(join(cmd)," "));
 	}
-	
-	//printf("IN\n");
 	input = &cmd[i][j+1];
-	cmd[i][j] = '\0';//replace < with null so it isolates command for exec
-      } if ((j++ < strlen(cmd[i])) && (cmd[i][j] == '>') && (cmd[i][j+1] == '>')) { //changing stdout by appending [NOT WORKING YET]
-	outA = 2;
-	printf("OUT2\n");
-	output = &cmd[i][j +2];
-	cmd[i][j] = '\0'; cmd[i][j+1] = '\0';//replace >> with null so it isolates command for exec
+	cmd[i][j] = '\0';//replace < w/ null so it isolates command for exec
       }
     }
-  } if (!(out || in)) { return 1; } //bool: redir is true : needs to be run
-
+  } if (!(out || in || outA)) { printf("OutA@bye: %d", outA); return 1; } //bool: notRedir is true
+  printf("OutA? still: %d", outA);
+  
   //redirection!
   int fd;
-  if (out) {
+  printf("outA: %d", outA);
+  if (outA) {
+    printf("output: %s", output);
+    fd = open(output,O_APPEND);
+    dup2(fd, STDOUT_FILENO);
+    close(fd);
+  } if (out) {
     //printf("output: %s\n", output);
     fd = open(output,O_WRONLY | O_TRUNC | O_CREAT, 0644);
     dup2(fd, STDOUT_FILENO);
@@ -95,15 +104,11 @@ int notRedir(char** cmd) {
     fd = open(input, O_RDONLY);
     dup2(fd, STDIN_FILENO);
     close(fd);
-  } if (outA) {
-    fd = open(output,O_APPEND);
-    dup2(fd, STDOUT_FILENO);
-    close(fd);
   }
   execvp(cmd[0], cmd);
   exit(1);
   
-  return 0; //bool: redir is false : execvp was already run
+  return 0; //bool: notRedir is false. we redirected
 }
 
 void exec(char** cmd) {
