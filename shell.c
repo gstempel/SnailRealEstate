@@ -47,6 +47,12 @@ int notRedir(char** cmd) {
 	//printf("OUT\n");
 	output = &cmd[i][j+1];
 	cmd[i][j] = '\0';//replace > with null so it isolates command for exec
+	if (j==0) { // > is isolated
+	  output = cmd[i+1];
+	  //output = &(cmd[i+1]);
+	  printf("Output: %s\n", output);
+	}
+
       } if (cmd[i][j] == '<') { //changing stdin
 	in = 2;
 	//printf("IN\n");
