@@ -10,7 +10,7 @@ char * getInput() {
 
   //get input from stdin and remove newline
   fgets(input, sizeof(input), stdin);
-  *(strchr(input, '\n')) = NULL;
+  *(strchr(input, '\n')) = '\0';
 
   //turn stack mem to persistent mem for return
   char* retInput = (char*) malloc(strlen(input)+1);
@@ -37,32 +37,51 @@ char ** split(char * str, char * delim) {
 }
 
 int redir(char** cmd) {
-  int i, j, out=0, in=0;
-  char* input = "";
-  char* output = "";
-  for (i=0; i<numPtrElements(cmd); i++) {
+  int i, j, out=0, in=0, outA = 0;
+  char *input, *output;
+  int max = numPtrElements(cmd);
+  for (i=0; i<max; i++) {
     for (j=0; j<strlen(cmd[i]); j++) {
       if (cmd[i][j] == '>') { //changing stdout
 	out=2;
-	printf("OUT\n");
-	//output = file to output to
+	//printf("OUT\n");
+	output = &cmd[i][j+1];
+	cmd[i][j] = '\0';//replace > with null so it isolates command for exec
       } if (cmd[i][j] == '<') { //changing stdin
 	in = 2;
-	printf("IN\n");
-	//input = file to use as input
+	//printf("IN\n");
+	input = &cmd[i][j+1];
+	cmd[i][j] = '\0';//replace < with null so it isolates command for exec
+      } if ((j++ < strlen(cmd[i])) && (cmd[i][j] == '>') && (cmd[i][j+1] == '>')) { //changing stdout by appending [NOT WORKING YET]
+	outA = 2;
+	printf("OUT2\n");
+	output = &cmd[i][j +2];
+	cmd[i][j] = '\0'; cmd[i][j+1] = '\0';//replace >> with null so it isolates command for exec
       }
     }
-  } if (!(out || in)) { return 0; } //bool: redir is false
+  } if (!(out || in)) { return 1; } //bool: redir is true : needs to be run
 
   //redirection!
+  int fd;
   if (out) {
-    printf("output: %s\n", output);
+    //printf("output: %s\n", output);
+    fd = open(output,O_WRONLY | O_TRUNC | O_CREAT, 0644);
+    dup2(fd, STDOUT_FILENO);
+    close(fd);
   } if (in) {
-    printf("input: %s\n", input);
+    //printf("input: %s\n", input);
+    fd = open(input, O_RDONLY);
+    dup2(fd, STDIN_FILENO);
+    close(fd);
+  } if (outA) {
+    fd = open(output,O_APPEND);
+    dup2(fd, STDOUT_FILENO);
+    close(fd);
   }
-  //execvp(cmd[0], cmd[0]);
+  execvp(cmd[0], cmd);
+  exit(1);
   
-  return 1; //bool: redir is true
+  return 0; //bool: redir is false : execvp was already run
 }
 
 void exec(char** cmd) {
@@ -77,8 +96,9 @@ void exec(char** cmd) {
       int status;
       wait(&status); //wait for child
     } else { //this is child
-      if (!(redir(cmd))) { 
+      if (redir(cmd)) { 
 	execvp(cmd[0], cmd);
+	exit(1);
       }
     }
   }
