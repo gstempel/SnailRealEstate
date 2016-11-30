@@ -2,7 +2,9 @@
 by Grace Stempel, Emma Vukelj, Quinn Dibble
 
 Features:
-	Forks and executes commands!
+	 - Forks and executes commands
+	 - Handles multiple commands entered at once (;)
+	 - Redirects stdin or stdout (once per command)
 
 Attempted:
 
