@@ -18,11 +18,6 @@ char * getInput() {
   return retInput;
 }
 
-void cd(char* path) {
-  //needs separate fxn for possible error handling
-  chdir(path);
-}
-
 char ** split(char * str, char * delim) {
   //effectively split str by delim
   char **command = (char**)malloc(100);
@@ -36,11 +31,20 @@ char ** split(char * str, char * delim) {
   return command;
 }
 
+int numPtrElements(char** ptr) {
+  int numChars = 0;
+  while (*ptr++) {
+    numChars++;
+  }
+  return numChars;
+}
+
 //joins str but as char** for use in notRedir
 char* join(char** strA) {
   char* strArr = (char*) malloc(100);
   int max = numPtrElements(strA);
   int i;
+  // keep appending each element to retVal
   for (i=0; i<max; i++) {
     strcat(strArr, strA[i]);
   }
@@ -111,6 +115,11 @@ int notRedir(char** cmd) {
   return 0; //bool: notRedir is false. we redirected
 }
 
+void cd(char* path) {
+  //needs separate fxn for possible error handling
+  chdir(path);
+}
+
 void exec(char** cmd) {
   //handle special cases where forking is wrong approach
   if (!(strcmp(cmd[0],"exit"))) {
@@ -129,14 +138,6 @@ void exec(char** cmd) {
       }
     }
   }
-}
-
-int numPtrElements(char** ptr) {
-  int numChars = 0;
-  while (*ptr++) {
-    numChars++;
-  }
-  return numChars;
 }
 
 void run() {

@@ -10,6 +10,13 @@ Bugs:
 
 Files & Function Headers:
 shell.c: Handles shell operations
+
+	/*======== char* getInput() ==========
+	Returns: input entered by user through command line
+	without a trailing newline
+
+	Uses fgets to get input and strchr to handle the newline
+	====================*/
 	
 	/*======== char** split(char * str, char * delim) ==========
 	Inputs: string to be split by delimeter
@@ -20,11 +27,19 @@ shell.c: Handles shell operations
 	str is null
 	====================*/
 
-	/*======== char* getInput() ==========
-	Returns: input entered by user through command line
-	without a trailing newline
+	/*======== int numPtrElements(char** ptr) ==========
+	Inputs: pointer to be measured
+	Returns: Number of elements in pointer
+	====================*/
 
-	Uses fgets to get input and strchr to handle the newline
+	/*======== char* join(char** strA) ==========
+	Inputs: array of strings to be turned into one string
+	Returns: one string, with strings of strA appended in order
+	====================*/
+
+	/*======== int notRedir(char** cmd) ==========
+	Inputs: command (array of strings) to be checked for redirection
+	Returns: int (boolean): 1 if no redirection, 0 if redirection
 	====================*/
 
 	/*======== void cd (char* path) ==========
@@ -33,12 +48,12 @@ shell.c: Handles shell operations
 	Uses chdir() to change current cwd of process to path
 	====================*/
 
-	/*======== void run() ==========
-	Infinite loop that gets, splits, and executes input
-	====================*/
-
 	/*======== void exec(char** cmd) ==========
 	Inputs: arr of command line args to be executed
 
 	Executes given command, checking for special cases (cd, exit)
+	====================*/
+
+	/*======== void run() ==========
+	Infinite loop that gets, splits, and executes input
 	====================*/
