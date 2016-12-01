@@ -26,8 +26,6 @@ char ** split(char * str, char * delim) {
     i++;
   command[i] = 0;
   
-  //turn heap mem to more persistent mem for return
-
   return command;
 }
 
@@ -57,14 +55,15 @@ int notRedir(char** cmd) {
   int max = numPtrElements(cmd);
   for (i=0; i<max; i++) {
     for (j=0; j<strlen(cmd[i]); j++) {
+
       if (((j+1) <= strlen(cmd[i])) && (cmd[i][j] == '>') && (cmd[i][j+1] == '>')) {
 	outA = 2;
 	//change str format if >> is in weird place
 	if (j==0 || j+1==strlen(cmd[i])-1) { return notRedir(split(join(cmd)," ")); }
 	output = &cmd[i][j +2];
-	printf("Look for OutA!\n");
 	cmd[i][j] = '\0';
 	cmd[i][j+1] = '\0';//replace >> with null so it isolates command for exec
+
       }
       
       else if (cmd[i][j] == '>' && (!(outA))) { //changing stdout
@@ -75,9 +74,10 @@ int notRedir(char** cmd) {
 	}
 	output = &cmd[i][j+1];
 	cmd[i][j] = '\0';//replace > with null so it isolates command for exec
+      }
 
 	//changing stdin
-      } else if (cmd[i][j] == '<') {
+      else if (cmd[i][j] == '<') {
 	in = 2;
 	// < is in weird place
 	if (j==0 || j==strlen(cmd[i])-1) {
@@ -87,15 +87,19 @@ int notRedir(char** cmd) {
 	cmd[i][j] = '\0';//replace < w/ null so it isolates command for exec
       }
     }
-  } if (!(out || in || outA)) { printf("OutA@bye: %d", outA); return 1; } //bool: notRedir is true
-  printf("OutA? still: %d", outA);
+  }
+
+  if (!(out || in || outA)) {  //bool: notRedir is true
+    printf("OutA@bye: %d", outA); 
+    return 1;
+  }
   
   //redirection!
   int fd;
   printf("outA: %d", outA);
   if (outA) {
-    printf("output: %s", output);
-    fd = open(output,O_APPEND);
+    //printf("output: %s\n", output);
+    fd = open(output,O_APPEND | O_WRONLY, 0644);
     dup2(fd, STDOUT_FILENO);
     close(fd);
   } if (out) {
