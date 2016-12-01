@@ -49,13 +49,33 @@ char* join(char** strA) {
   return strArr;
 }
 
+void piping(char** args, char* cmd) {
+    char *tmp = "pipeFile";
+    int fd = open(tmp, O_CREAT | O_TRUNC | O_WRONLY, 0600);
+    int STDOUT_FILENO_DUP = dup(STDOUT_FILENO);
+    int STDIN_FILENO_DUP = dup(STDIN_FILENO);
+
+    dup2(fd, STDOUT_FILENO); // redirect stdout to stdin
+    close(fd);
+    //    execvp(args[0], args);
+
+    dup2(STDOUT_FILENO_DUP, STDOUT_FILENO);
+    fd = open(tmp, O_RDONLY);
+    dup2(fd, STDIN_FILENO);
+    close(fd);
+    execvp(cmd, &cmd);
+    dup2(STDIN_FILENO_DUP, STDIN_FILENO);
+    //    unlink(tmp);
+}
+
+
 int notRedir(char** cmd) {
-  int i, j, out=0, in=0, outA = 0;
+  int i, j, out=0, in=0, outA = 0, inOut = 0;
   char *input, *output;
   int max = numPtrElements(cmd);
   for (i=0; i<max; i++) {
     for (j=0; j<strlen(cmd[i]); j++) {
-
+      //Redirects stdout to a file by appending
       if (((j+1) <= strlen(cmd[i])) && (cmd[i][j] == '>') && (cmd[i][j+1] == '>')) {
 	outA = 2;
 	//change str format if >> is in weird place
@@ -65,8 +85,8 @@ int notRedir(char** cmd) {
 	cmd[i][j+1] = '\0';//replace >> with null so it isolates command for exec
 
       }
-      
-      else if (cmd[i][j] == '>' && (!(outA))) { //changing stdout
+      //Redirects stdout to a file
+      else if (cmd[i][j] == '>' && (!(outA))) {
 	out=2;
 	//> is in weird place
 	if (j==0 || j==strlen(cmd[i])-1) {
@@ -75,8 +95,7 @@ int notRedir(char** cmd) {
 	output = &cmd[i][j+1];
 	cmd[i][j] = '\0';//replace > with null so it isolates command for exec
       }
-
-	//changing stdin
+      //Redirects stdin from a file
       else if (cmd[i][j] == '<') {
 	in = 2;
 	// < is in weird place
@@ -86,17 +105,27 @@ int notRedir(char** cmd) {
 	input = &cmd[i][j+1];
 	cmd[i][j] = '\0';//replace < w/ null so it isolates command for exec
       }
+      //Redirect stdout from one command to stdin of the next
+      else if (cmd[i][j] == '|') {
+	inOut = 2;
+	// | is in weird place
+	if (j==0 || j==strlen(cmd[i])-1) {
+	  return notRedir(split(join(cmd)," "));
+	}
+	cmd[i][j] = '\0';
+	input = &cmd[i][i+1];
+	piping(cmd, input);
+      }
     }
   }
 
-  if (!(out || in || outA)) {  //bool: notRedir is true
+  if (!(out || in || outA || inOut)) {  //bool: notRedir is true
     printf("OutA@bye: %d", outA); 
     return 1;
   }
   
   //redirection!
   int fd;
-  printf("outA: %d", outA);
   if (outA) {
     //printf("output: %s\n", output);
     fd = open(output,O_APPEND | O_WRONLY, 0644);
@@ -118,6 +147,7 @@ int notRedir(char** cmd) {
   
   return 0; //bool: notRedir is false. we redirected
 }
+
 
 void cd(char* path) {
   //needs separate fxn for possible error handling
