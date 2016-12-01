@@ -201,7 +201,10 @@ void exec(char** cmd) {
       wait(&status); //wait for child
     } else { //this is child
       if (notRedir(cmd)) {
-	execvp(cmd[0], cmd);
+	int errrr = execvp(cmd[0], cmd);
+	if (errrr == -1) {
+	  printf("%s: command not found\n", cmd[0]);
+	}
 	exit(1);
       }
     }
