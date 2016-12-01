@@ -7,6 +7,7 @@
 #include <limits.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 //split str by delim
 char ** split(char * str, char * delim);

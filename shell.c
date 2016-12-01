@@ -71,9 +71,8 @@ int piping(char* args, char* cmd) {
     wait(&status);
   } else {
     if (execvp(toRun[0], toRun) == -1) {
-      printf("Error\n");
+      printf("%s\n", strerror(errno));
       return -1;
-      kill(getpid(), 9);
     }
   }
   close(foo);
@@ -94,9 +93,8 @@ int piping(char* args, char* cmd) {
     wait(&status);
   } else {
     if (execvp(secondRun[0], secondRun) == -1) {
-      printf("error\n");
+      printf("%s\n", strerror(errno));
       return -1;
-      kill(getpid(), 9);
     }
   }
   
