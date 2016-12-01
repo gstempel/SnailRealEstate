@@ -17,6 +17,12 @@ int numPtrElements(char** ptr);
 //return string with all strings in strA appended in order
 char* join(char** strA);
 
+//handle piping picked up in notRedir
+void piping(char** args, char* cmd);
+
+//return 1 if no redir/piping in cmd, else return 1
+int notRedir(char** cmd);
+
 //return userInput for command without \n
 char * getInput();
 

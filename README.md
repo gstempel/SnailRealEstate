@@ -39,6 +39,11 @@ shell.c: Handles shell operations
 	Returns: one string, with strings of strA appended in order
 	====================*/
 
+	/*======== void piping(char** args, char* cmd)  ==========
+	Inputs: array of args and original command
+	Handles piping (in->out) caught in notRedir()
+	====================*/
+
 	/*======== int notRedir(char** cmd) ==========
 	Inputs: command (array of strings) to be checked for redirection
 	Returns: int (boolean): 1 if no redirection, 0 if redirection
