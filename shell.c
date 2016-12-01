@@ -49,14 +49,10 @@ char* join(char** strA) {
   return strArr;
 }
 
-void piping(char* args, char* cmd) {
+int piping(char* args, char* cmd) {
   //parse string
   char** newArgs = split(args,"|");
-  int i, max = numPtrElements(newArgs);
-  char** cmdsOut;
-  for (i=0; i<max; i++) {
-    printf("arg %d: %s\n", i, newArgs[i]);
-  }
+  int retVal = 0;
   
   //create helper file
   char *tmp = "pipeHelp"; //rename to hidden later
@@ -74,7 +70,11 @@ void piping(char* args, char* cmd) {
     int status;
     wait(&status);
   } else {
-    execvp(toRun[0], toRun);
+    if (execvp(toRun[0], toRun) == -1) {
+      printf("Error\n");
+      return -1;
+      kill(getpid(), 9);
+    }
   }
   close(foo);
   foo = open(tmp,O_RDONLY, 0600);
@@ -93,11 +93,16 @@ void piping(char* args, char* cmd) {
     int status;
     wait(&status);
   } else {
-    execvp(secondRun[0], secondRun);
+    if (execvp(secondRun[0], secondRun) == -1) {
+      printf("error\n");
+      return -1;
+      kill(getpid(), 9);
+    }
   }
   
   //put files back :)
   dup2(STDIN_FILENO_DUP, STDIN_FILENO);
+  return 0;
 }
 
 int notRedir(char** cmd) {
@@ -139,7 +144,12 @@ int notRedir(char** cmd) {
       //Redirect stdout from one command to stdin of the next
       else if (cmd[i][j] == '|') {
 	inOut = 2;
-	piping(join(cmd), input);
+	int pr = piping(join(cmd), input);
+	printf("pr: %d", pr);
+	if (pr == -1) {
+	  kill(getppid(), 9);
+	  kill(getpid(), 9);
+	}
       }
     }
   }
