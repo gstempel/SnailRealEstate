@@ -50,64 +50,55 @@ char* join(char** strA) {
 }
 
 void piping(char* args, char* cmd) {
-  int parent = fork();
-  if (parent) {
+  //parse string
+  char** newArgs = split(args,"|");
+  int i, max = numPtrElements(newArgs);
+  char** cmdsOut;
+  for (i=0; i<max; i++) {
+    printf("arg %d: %s\n", i, newArgs[i]);
+  }
+  
+  //create helper file
+  char *tmp = "pipeHelp"; //rename to hidden later
+  int foo = open(tmp, O_CREAT | O_TRUNC | O_WRONLY, 0600);
+  
+  //redir strdout to foo
+  int STDOUT_FILENO_DUP = dup(STDOUT_FILENO);
+  dup2(foo, STDOUT_FILENO);
+  printf("hello\n");
+  //send initial command output to helper file
+  char** toRun = split(newArgs[0]," ");
+  toRun[numPtrElements(toRun)] = 0;
+  int par = fork();
+  if (par) {
     int status;
     wait(&status);
-  } else { //do stuff!
-    
-    //parse string
-    char** newArgs = split(args,"|");
-    int i, max = numPtrElements(newArgs);
-    char** cmdsOut;
-    for (i=0; i<max; i++) {
-      printf("arg %d: %s\n", i, newArgs[i]);
-    }
-    
-    //create helper file
-    char *tmp = "pipeHelp"; //rename to hidden later
-    int foo = open(tmp, O_CREAT | O_TRUNC | O_WRONLY, 0600);
-    
-    //redir strdout to foo
-    int STDOUT_FILENO_DUP = dup(STDOUT_FILENO);
-    dup2(foo, STDOUT_FILENO);
-    
-    //send initial command output to helper file
-    char** toRun = split(newArgs[0]," ");
-    toRun[numPtrElements(toRun)] = 0;
+  } else {
     execvp(toRun[0], toRun);
-    close(foo);
-    foo = open(tmp, O_TRUNC | O_WRONLY, 0600);
-    
-    //redir foo to stdin
-    int STDIN_FILENO_DUP = dup(STDIN_FILENO);
-    dup2(foo, STDIN_FILENO);
-    dup2(STDOUT_FILENO_DUP, STDOUT_FILENO);
-    
-    //send second command (but foo as input!)
-    char** secondRun = split(newArgs[1]," ");
-    secondRun[numPtrElements(toRun)] = 0;
-    execvp(secondRun[0], secondRun);
-    
-    //put files back :)
-    dup2(STDIN_FILENO_DUP, STDIN_FILENO);
-    
-    /*
-      int STDIN_FILENO_DUP = dup(STDIN_FILENO);
-      close(foo);
-      //    execvp(args[0], args);
-      
-      dup2(STDOUT_FILENO_DUP, STDOUT_FILENO);
-      foo = open(tmp, O_RDONLY);
-      dup2(foo, STDIN_FILENO);
-      close(foo);
-      execvp(cmd, &cmd);
-      dup2(STDIN_FILENO_DUP, STDIN_FILENO);
-      //    unlink(tmp);
-      */
   }
-}
+  close(foo);
+  foo = open(tmp,O_RDONLY, 0600);
+  
+  //redir foo to stdin
+  int STDIN_FILENO_DUP = dup(STDIN_FILENO);
+  dup2(foo, STDIN_FILENO);
+  dup2(STDOUT_FILENO_DUP, STDOUT_FILENO);
+  
+  //send second command (but foo as input!)
+  char** secondRun = split(newArgs[1]," ");
+  secondRun[numPtrElements(toRun)] = 0;
 
+  int par2 = fork();
+  if (par2) {
+    int status;
+    wait(&status);
+  } else {
+    execvp(secondRun[0], secondRun);
+  }
+  
+  //put files back :)
+  dup2(STDIN_FILENO_DUP, STDIN_FILENO);
+}
 
 int notRedir(char** cmd) {
   int i, j, out=0, in=0, outA = 0, inOut = 0;
