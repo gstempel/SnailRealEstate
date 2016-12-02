@@ -1,7 +1,5 @@
 #include "shell.h"
 
-#include "shell.h"
-
 int numPtrElements(char** ptr) {
   int numChars = 0;
   while (*ptr++) {
@@ -25,13 +23,14 @@ int piping(char* args, char* cmd) {
   printf("hello\n");
   //send initial command output to helper file
   char** toRun = split(newArgs[0]," ");
-  toRun[numPtrElements(toRun)] = 0;
+  toRun[numPtrElements(toRun) + 1] = 0;
   int par = fork();
   if (par) {
     int status;
     wait(&status);
   } else {
     if (execvp(toRun[0], toRun) == -1) {
+      dup2(STDOUT_FILENO_DUP, STDOUT_FILENO);
       printf("%s\n", strerror(errno));
       return -1;
     }
