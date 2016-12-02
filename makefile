@@ -1,8 +1,9 @@
-turtletest: shell.c shell.h
-	gcc shell.c -o turtleTest
+turtletest: parse.c run.c shell.h
+	gcc -g parse.c run.c
+	gcc -o shell parse.c run.c
 
-run: turtleTest
-	./turtleTest
+run: shell
+	./shell
 
 clean:
 	rm *~
