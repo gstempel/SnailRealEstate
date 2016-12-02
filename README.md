@@ -33,7 +33,8 @@ Attempted:
 Bugs:
 
 Files & Function Headers:
-shell.c: Handles shell operations
+
+parse.c: Handles user input and parsing and that jazz
 
 	/*======== char* getInput() ==========
 	Returns: input entered by user through command line
@@ -51,14 +52,16 @@ shell.c: Handles shell operations
 	str is null
 	====================*/
 
-	/*======== int numPtrElements(char** ptr) ==========
-	Inputs: pointer to be measured
-	Returns: Number of elements in pointer
-	====================*/
-
 	/*======== char* join(char** strA) ==========
 	Inputs: array of strings to be turned into one string
 	Returns: one string, with strings of strA appended in order
+	====================*/
+
+run.c: Handles execution and forking and memory and spooning of given commands
+
+	/*======== int numPtrElements(char** ptr) ==========
+	Inputs: pointer to be measured
+	Returns: Number of elements in pointer
 	====================*/
 
 	/*======== void piping(char** args, char* cmd)  ==========
