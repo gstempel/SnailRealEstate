@@ -55,7 +55,7 @@ int piping(char* args, char* cmd) {
   int retVal = 0;
   
   //create helper file
-  char *tmp = "pipeHelp"; //rename to hidden later
+  char *tmp = ".pipeHelp"; //rename to hidden later
   int foo = open(tmp, O_CREAT | O_TRUNC | O_WRONLY, 0600);
   
   //redir strdout to foo
@@ -143,7 +143,6 @@ int notRedir(char** cmd) {
       else if (cmd[i][j] == '|') {
 	inOut = 2;
 	int pr = piping(join(cmd), input);
-	printf("pr: %d", pr);
 	if (pr == -1) {
 	  kill(getppid(), 9);
 	  kill(getpid(), 9);
@@ -161,16 +160,28 @@ int notRedir(char** cmd) {
   if (outA) {
     //printf("output: %s\n", output);
     fd = open(output,O_APPEND | O_WRONLY, 0644);
+    if (fd == -1) {
+      printf("%s\n", strerror(errno));
+      return 0;
+    }
     dup2(fd, STDOUT_FILENO);
     close(fd);
   } if (out) {
     //printf("output: %s\n", output);
     fd = open(output,O_WRONLY | O_TRUNC | O_CREAT, 0644);
+    if (fd == -1) {
+      printf("%s\n", strerror(errno));
+      return 0;
+    }
     dup2(fd, STDOUT_FILENO);
     close(fd);
   } if (in) {
     //printf("input: %s\n", input);
     fd = open(input, O_RDONLY);
+    if (fd == -1) {
+      printf("%s\n", strerror(errno));
+      return 0;
+    }
     dup2(fd, STDIN_FILENO);
     close(fd);
   } if (inOut) {
@@ -185,7 +196,9 @@ int notRedir(char** cmd) {
 
 void cd(char* path) {
   //needs separate fxn for possible error handling
-  chdir(path);
+  if (chdir(path) == -1) {
+    printf("%s\n", strerror(errno));
+  }
 }
 
 void exec(char** cmd) {
@@ -203,6 +216,7 @@ void exec(char** cmd) {
       if (notRedir(cmd)) {
 	int errrr = execvp(cmd[0], cmd);
 	if (errrr == -1) {
+	  //printf("%s\n", strerror(errno));
 	  printf("%s: command not found\n", cmd[0]);
 	}
 	exit(1);
