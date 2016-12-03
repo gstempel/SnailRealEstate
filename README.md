@@ -1,14 +1,14 @@
 # SnailRealEstate
 by Grace Stempel, Emma Vukelj, Quinn Dibble
 
-READ THIS BEFORE EXECUTING:
+READ THIS BEFORE EXECUTING
 
-The syntax for executing a command is:
+The syntax for executing a command is
 /Users/Username/Directory: Command Arg1 Arg2 Arg3
 Do NOT include more than once space between arguments/commands
 If including a semicolon, pipe, or redirection, you may or may not include ONE space
 between the symbol and commands.
-Ex:
+Ex
 	* ls -a -l
 	* ls -a| wc
 	* ls -a | wc
