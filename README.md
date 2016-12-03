@@ -10,19 +10,20 @@ If including a semicolon, pipe, or redirection, you may or may not include ONE s
 between the symbol and commands.
 
 Ex:
+
 	* ls -a -l
-	
 	* ls -a| wc
-	
 	* ls -a | wc
 	
 All of the above are acceptable.
-Ex of unacceptable syntax:
-	1. ls-a
-	2. ls -a   |        wc
-	3. ls -a>	filename
 
-You can only do one redirection or pipe per statement.
+Ex of unacceptable syntax:
+
+	* ls-a
+	* ls -a   |        wc
+	* ls -a>	filename
+
+You can only do one redirection and/or one pipe per statement (one of each is okay!).
 
 ## Features:
 	  * Forks and executes commands
