@@ -9,30 +9,30 @@ Do NOT include more than once space between arguments/commands
 If including a semicolon, pipe, or redirection, you may or may not include ONE space
 between the symbol and commands.
 Ex
-	*	ls -a -l
-	*	ls -a| wc
-	*	ls -a | wc
+	* ls -a -l
+	* ls -a| wc
+	* ls -a | wc
 All of the above are acceptable.
 Ex of unacceptable syntax:
-	* ls-a
-	* ls -a   |        wc
-	* ls -a>	filename
+	1. ls-a
+	2. ls -a   |        wc
+	3. ls -a>	filename
 
 You can only do one redirection or pipe per statement.
 
-Features:
+## Features:
 	  * Forks and executes commands
 	  * Handles multiple commands entered at once (;)
 	  * Redirects >, <, and >> (ONCE PER COMMAND)
 	  * Handles pipes (ONCE PER COMMAND)
 
-Attempted:
+## Attempted:
 	* All attempts successful!
 
-Bugs:
+## Bugs:
 	* None that we know of!
 
-Files & Function Headers:
+##Files & Function Headers:
 
 parse.c: Handles user input and parsing and that jazz
 
