@@ -21,14 +21,16 @@ Ex of unacceptable syntax:
 You can only do one redirection or pipe per statement.
 
 Features:
-	 * Forks and executes commands
-	 * Handles multiple commands entered at once (;)
-	 * Redirects >, <, and >> (once per command)
-	 * Handles a single pipe
+	  * Forks and executes commands
+	  * Handles multiple commands entered at once (;)
+	  * Redirects >, <, and >> (ONCE PER COMMAND, no piping)
+	  * Handles pipes (can be multiple per command!
 
 Attempted:
+	* All attempts successful!
 
 Bugs:
+	* None that we know of!
 
 Files & Function Headers:
 
