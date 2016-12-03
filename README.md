@@ -9,9 +9,9 @@ Do NOT include more than once space between arguments/commands
 If including a semicolon, pipe, or redirection, you may or may not include ONE space
 between the symbol and commands.
 Ex
-	* ls -a -l
-	* ls -a| wc
-	* ls -a | wc
+	*	ls -a -l
+	*	ls -a| wc
+	*	ls -a | wc
 All of the above are acceptable.
 Ex of unacceptable syntax:
 	* ls-a
@@ -23,8 +23,8 @@ You can only do one redirection or pipe per statement.
 Features:
 	  * Forks and executes commands
 	  * Handles multiple commands entered at once (;)
-	  * Redirects >, <, and >> (ONCE PER COMMAND, no piping)
-	  * Handles pipes (can be multiple per command!
+	  * Redirects >, <, and >> (ONCE PER COMMAND)
+	  * Handles pipes (ONCE PER COMMAND)
 
 Attempted:
 	* All attempts successful!
