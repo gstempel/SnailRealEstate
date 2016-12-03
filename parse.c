@@ -25,6 +25,14 @@ char ** split(char * str, char * delim) {
   while((command[i] = strsep(&str, delim)))
     i++;
   command[i] = 0;
+  if (delim[0] == ' ') {
+    int j;
+    for (j=0; j<i; j++) {
+      if (command[j][0] == 'l' && command[j][1] == 's') {
+	strcpy(command[j],"ls");
+      }
+    }
+  }
   
   return command;
 }
